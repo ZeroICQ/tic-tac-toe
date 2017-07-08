@@ -17,11 +17,17 @@ header {
     /* background-color: #C7C7C7; */
     width: 200px;
     height: 200px;
+    font-size: 100px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 200px;
+    user-select: none;
+    cursor: default;
 }
 
 #game-field .border {
-    background-color: #646363;
-    border-radius: 20px;
+    background-color: #969696;
+    border-radius: 5px;
 }
 
 #game-field div.hor-border {
@@ -38,10 +44,21 @@ header {
     width: 10px;
 }
 
-#c1-2, #c2-2, #c3-2 {
+#c-0-1, #c-1-1, #c-2-1 {
     margin-left: 10px;
 }
 
-#c1-3, #c2-3, #c3-3 {
+#c-0-2, #c-1-2, #c-2-2 {
     margin-left: 10px;
+}
+
+div#menu {
+    display: none;
+    position: absolute;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 100;
+    top: -100%;
 }
