@@ -1,0 +1,47 @@
+header {
+    text-align: center;
+}
+
+#game-field {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0 auto;
+    width: 620px;
+    height: 620px;
+    overflow: hidden;
+}
+
+#game-field div {
+    float: left;
+    /* background-color: #C7C7C7; */
+    width: 200px;
+    height: 200px;
+}
+
+#game-field .border {
+    background-color: #646363;
+    border-radius: 20px;
+}
+
+#game-field div.hor-border {
+    display: block;
+    width: 100%;
+    height: 10px;
+}
+
+#game-field div.vert-border {
+    margin: 0;
+    position: absolute;
+    display: inline-block;
+    height: 100%;
+    width: 10px;
+}
+
+#c1-2, #c2-2, #c3-2 {
+    margin-left: 10px;
+}
+
+#c1-3, #c2-3, #c3-3 {
+    margin-left: 10px;
+}
