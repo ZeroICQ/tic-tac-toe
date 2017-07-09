@@ -171,3 +171,8 @@ header h2 {
     left: 620px;
     float: left;
 }
+
+.preload {
+    display: none;
+    visibility: hidden;
+}
