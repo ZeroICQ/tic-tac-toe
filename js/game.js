@@ -15,6 +15,16 @@ $(document).ready(function() {
         return rand; 
     }
 
+    function setCross(cell) {
+        cell.html("<img src='img/cross.png'>");
+        console.log('set cross');
+    }
+
+    function setZero(cell) {
+        cell.html("<img src='img/zero.png'>");
+        console.log('set zero');
+    }
+
     var easyAi = function () {};
 
     easyAi.prototype.makeTurn = function(game) {
@@ -66,7 +76,7 @@ $(document).ready(function() {
         for (let i = 0; i < 3; ++i) {
             for (let j = 0; j < 3; ++j) {   
                 this.cellState[i][j] = FREE;
-                $('#c-'+j+'-'+i).text('')
+                $('#c-'+j+'-'+i).html('')
             }
         }
     };
@@ -85,7 +95,7 @@ $(document).ready(function() {
         if (this.gameState === HUMAN_TURN) {
             if(this.cellState[x][y] === FREE) {
                 this.cellState[x][y] = CROSS;
-                cell.text("X");
+                setCross(cell);
             }
             else
                 return;
@@ -93,7 +103,7 @@ $(document).ready(function() {
         else if (this.gameState === AI_TURN) {
             console.log('comp end thinking');
             this.cellState[x][y] = ZERO;
-            cell.text("O");
+            setZero(cell);
         }
 
         if(this.checkWin() === true) {
