@@ -185,19 +185,18 @@ $(document).ready(function() {
         menu.finish().show(0)
         console.log('finished?');
 
-        menu.animate({'top': '0%'}, 1000);
+        menu.animate({'top': '0px'}, 1000);
     }
 
     TTT.prototype.hideMenu = function() {
         var menu = $("#menu");
 
         console.log('hide menu');
-        menu.animate({'top': '-100%'}, 1000, function() {
+        menu.animate({'top': '-512px'}, 1000, function() {
             menu.hide(0)
             $("#win").hide(0);
             $("#loose").hide(0);
             $("#tie").hide(0);
-            console.log('hide staff')
         });
     };
 
