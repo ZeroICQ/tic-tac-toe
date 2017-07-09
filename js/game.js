@@ -28,32 +28,35 @@ $(document).ready(function() {
     var easyAi = function () {};
 
     easyAi.prototype.makeTurn = function(game) {
-        var cellState = game.cellState;
-        for (let i = 0; i < 3; ++i)
-            for (let j = 0; j < 3; ++j) {
-                if (cellState[i][j] === FREE) {
-                    cellState[i][j] = ZERO;
-                    if (game.checkWin()) {
-                        game.makeTurn(i, j);
+        setTimeout(function (game) {
+            var cellState = game.cellState;
+            for (let i = 0; i < 3; ++i)
+                for (let j = 0; j < 3; ++j) {
+                    if (cellState[i][j] === FREE) {
+                        cellState[i][j] = ZERO;
+                        if (game.checkWin()) {
+                            game.makeTurn(i, j);
+                            return;
+                        }
+                        else 
+                            cellState[i][j] = FREE;
+                    }
+                }
+
+            var randCell = randomInteger(1, 9 - game.turnCount);
+            var c = 0;
+            for (let y = 0; y < 3; ++y) {
+                for (let x = 0; x < 3; ++x) {
+                    if (cellState[x][y] === FREE)
+                        c++;
+
+                    if (c === randCell) {
+                        game.makeTurn(x,y);
                         return;
                     }
-                    else 
-                        cellState[i][j] = FREE;
                 }
             }
-
-        var randCell = randomInteger(1, 9 - game.turnCount);
-        var c = 0;
-        for (let y = 0; y < 3; ++y)
-            for (let x = 0; x < 3; ++x) {
-                if (cellState[x][y] === FREE)
-                    c++;
-
-                if (c === randCell) {
-                    game.makeTurn(x,y);
-                    return;
-                }
-            }
+        }, randomInteger(200, 2000), game);
     };
 
     var Player = function (game) {
@@ -66,7 +69,7 @@ $(document).ready(function() {
     Player.prototype.clearListeners = function(argument){
         $(".game-cell").off('click');
     };
-    
+
     var Game = function(ttt, AI) {
         this.ttt = ttt; 
         this.AI = AI;
@@ -77,7 +80,6 @@ $(document).ready(function() {
         for (let i = 0; i < 3; ++i) {
             for (let j = 0; j < 3; ++j) {   
                 this.cellState[i][j] = FREE;
-                // $('#c-'+j+'-'+i).html('')
             }
         }
     };
@@ -103,6 +105,7 @@ $(document).ready(function() {
         }
         else if (this.gameState === AI_TURN) {
             console.log('comp end thinking');
+            
             this.cellState[x][y] = ZERO; 
             setZero(cell);
         }
@@ -121,9 +124,11 @@ $(document).ready(function() {
         if (this.gameState === HUMAN_TURN) {
             this.gameState = AI_TURN;
             console.log('comp start thinking');
-            setTimeout(function(game) {game.AI.makeTurn(game);}, 200, this);
+            this.ttt.setAIThinking();
+            this.AI.makeTurn(this);
         }
         else if (this.gameState === AI_TURN) {
+            ttt.setAIDefault();
             this.gameState = HUMAN_TURN;
         }
 
@@ -212,6 +217,7 @@ $(document).ready(function() {
                 $('#c-'+j+'-'+i).html('')
             }
         }
+        this.setAIDefault();
         this.hideMenu();
         var ai = new easyAi();
         var game = new Game(this, ai);
@@ -224,21 +230,24 @@ $(document).ready(function() {
         this.player.clearListeners();
         setTimeout(function () {
             ttt.showMenu();
-
-            switch (status) {
-                case 1:
-                    $("#win").show(0);
-                    break;
-                case 0:
-                    $("#loose").show(0);
-                    break;
-                case 3:
-                    $("#tie").show(0);
-                    break;
-                default:
-                    break;
-            }
         }, 200);
+
+        switch (status) {
+            case 1:
+                $("#win").show(0);
+                this.setAILost();
+                break;
+            case 0:
+                $("#loose").show(0);
+                this.setAIWon();
+                break;
+            case 3:
+                $("#tie").show(0);
+                break;
+            default:
+                break;
+        }
+    
     };
 
     TTT.prototype.redrawPossibleTurns = function(cellState){ 
@@ -252,8 +261,21 @@ $(document).ready(function() {
         }
     };
 
+    TTT.prototype.setAIThinking = function(){
+        $('#enemy').css('background-image', 'url("img/enemy-think.png")');
+    };
 
+    TTT.prototype.setAIDefault = function(){
+        $('#enemy').css('background-image', 'url("img/enemy-default.png")');
+    };
 
+    TTT.prototype.setAILost = function(){
+        $('#enemy').css('background-image', 'url("img/enemy-lost.png")');
+    };
+
+    TTT.prototype.setAIWon = function(){
+        $('#enemy').css('background-image', 'url("img/enemy-won.png")');
+    };
     var ttt  = new TTT();
     // ttt.start();
 });
