@@ -101,14 +101,17 @@ header h2 {
     margin-left: 10px;
 }
 
-#result div {
+#result {
     text-align: center;
+}
+
+#win, #loose, #tie {
     font-size: 48px;
     display: none;
 }
 
 #result {
-    padding-top: 100px;
+    padding-top: 80px;
 }
 
 #win {
@@ -118,8 +121,6 @@ header h2 {
 #loose {
     color: red;
 }
-
-
 
 #play-btn {
     display: block;
@@ -154,10 +155,6 @@ header h2 {
     outline:0;
 }
 
-/* .highlight {
-    background-color: #F3F2F2;
-} */
-
 .highlight:hover {
     background-color: #F3F2F2;
 }
@@ -175,4 +172,40 @@ header h2 {
 .preload {
     display: none;
     visibility: hidden;
+}
+
+
+.ai-btn {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    background: #00627a;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    border: 0px;
+}
+
+.ai-btn:hover {
+    background: #0088a6;
+    text-decoration: none;
+}
+
+.ai-btn:focus {
+    outline:0;
+}
+
+#ai-choose {
+    display: block;
+    margin: 0px auto 10px;
+
+}
+
+.active-btn {
+    background-color: #00CFDC;
+}
+.active-btn:hover {
+    background-color: #00CFDC;
 }

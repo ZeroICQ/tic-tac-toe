@@ -25,38 +25,97 @@ $(document).ready(function() {
         console.log('set zero');
     }
 
-    var easyAi = function () {};
 
-    easyAi.prototype.makeTurn = function(game) {
-        setTimeout(function (game) {
-            var cellState = game.cellState;
-            for (let i = 0; i < 3; ++i)
-                for (let j = 0; j < 3; ++j) {
-                    if (cellState[i][j] === FREE) {
-                        cellState[i][j] = ZERO;
-                        if (game.checkWin()) {
-                            game.makeTurn(i, j);
-                            return;
-                        }
-                        else 
-                            cellState[i][j] = FREE;
+    var EasyAi = function () {};
+
+    EasyAi.prototype.getWinTurn = function(cellState, game){
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {
+                if (cellState[i][j] === FREE) {
+                    cellState[i][j] = ZERO;
+                    if (game.checkWin()) {
+                        cellState[i][j] = FREE;
+                        return [i, j];
                     }
-                }
-
-            var randCell = randomInteger(1, 9 - game.turnCount);
-            var c = 0;
-            for (let y = 0; y < 3; ++y) {
-                for (let x = 0; x < 3; ++x) {
-                    if (cellState[x][y] === FREE)
-                        c++;
-
-                    if (c === randCell) {
-                        game.makeTurn(x,y);
-                        return;
-                    }
+                    else 
+                        cellState[i][j] = FREE;
                 }
             }
+        }
+        return false;
+    };
+
+    EasyAi.prototype.getRandomTurn = function(cellState, game){
+        var randCell = randomInteger(1, 9 - game.turnCount);
+        var c = 0;
+        for (let y = 0; y < 3; ++y) {
+            for (let x = 0; x < 3; ++x) {
+                if (cellState[x][y] === FREE)
+                    c++;
+
+                if (c === randCell) {
+                    return [x, y];
+                }
+            }
+        }
+    };
+
+    EasyAi.prototype.makeTurn = function(game) {
+        var that = this;
+        console.log("easy ai")
+        setTimeout(function (game) {
+            var cellState = game.cellState;
+            var aiWinTurn = that.getWinTurn(cellState, game);
+
+            if (aiWinTurn)
+                game.makeTurn(aiWinTurn[0], aiWinTurn[1]);
+            else {
+                var randTurn = that.getRandomTurn(cellState, game);
+                game.makeTurn(randTurn[0], randTurn[1]);
+            }
         }, randomInteger(200, 2000), game);
+    };
+
+    var HardAI = function() {
+        EasyAi.call(this);
+    };
+
+    HardAI.prototype = Object.create(EasyAi.prototype);
+
+    HardAI.prototype.getHumanWinTurn = function(cellState, game){
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {
+                if (cellState[i][j] === FREE) {
+                    cellState[i][j] = CROSS;
+                    if (game.checkWin()) {
+                        cellState[i][j] = FREE;
+                        return [i, j];
+                    }
+                    else 
+                        cellState[i][j] = FREE;
+                }
+            }
+        }
+        return false;
+    };
+
+    HardAI.prototype.makeTurn = function(game){
+        var that = this;
+        console.log("hard ai")
+        setTimeout(function (game) {
+            var cellState = game.cellState;
+            var aiWinTurn = that.getWinTurn(cellState, game);
+            var humanWinTurn = that.getHumanWinTurn(cellState, game);
+
+            if (aiWinTurn)
+                game.makeTurn(aiWinTurn[0], aiWinTurn[1]);
+            else if (humanWinTurn) 
+                game.makeTurn(humanWinTurn[0], humanWinTurn[1]);
+            else {
+                var randTurn = that.getRandomTurn(cellState, game);
+                game.makeTurn(randTurn[0], randTurn[1]);
+            }
+        }, randomInteger(500, 2000), game);
     };
 
     var Player = function (game) {
@@ -185,7 +244,14 @@ $(document).ready(function() {
     var TTT = function() {
         //is ok?
         var ttt = this;
+        this.AIChoose = 0;
+        this.AI = [EasyAi, HardAI];
         $('#play-btn').click(function () {ttt.start()});
+        $("#ai-choose button").click(function(event) {
+            $("#ai-choose button").removeClass('active-btn');
+            $(this).addClass('active-btn');
+            ttt.AIChoose = ($(this).attr("id").split("-"))[1];
+        });
     };
 
 
@@ -219,7 +285,7 @@ $(document).ready(function() {
         }
         this.setAIDefault();
         this.hideMenu();
-        var ai = new easyAi();
+        var ai = new this.AI[this.AIChoose]();
         var game = new Game(this, ai);
         this.player = new Player(game);
         game.start();
@@ -276,6 +342,7 @@ $(document).ready(function() {
     TTT.prototype.setAIWon = function(){
         $('#enemy').css('background-image', 'url("img/enemy-won.png")');
     };
+
     var ttt  = new TTT();
     // ttt.start();
 });
