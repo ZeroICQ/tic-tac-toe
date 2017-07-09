@@ -53,6 +53,9 @@ $(document).ready(function() {
         });
     };
 
+    Player.prototype.clearListeners = function(argument){
+        $(".game-cell").off('click');
+    };
     var Game = function(ttt, AI) {
         this.ttt = ttt; 
         this.AI = AI;
@@ -69,6 +72,7 @@ $(document).ready(function() {
     };
 
     Game.prototype.userClick = function(x, y){
+        console.log('user clicked '+x+' '+y);
         if (this.gameState === HUMAN_TURN)
             this.makeTurn(x, y);
     };
@@ -167,23 +171,23 @@ $(document).ready(function() {
     TTT.prototype.showMenu = function () {
         console.log('show menu');
         var menu = $("#menu");
-        if (menu.is(":visible"))
-            return;
 
-        menu.show(0)
+        menu.finish().show(0)
+        console.log('finished?');
+
         menu.animate({'top': '0%'}, 1000);
     }
 
     TTT.prototype.hideMenu = function() {
         var menu = $("#menu");
-        if (menu.is(":hidden"))
-            return;
+
         console.log('hide menu');
         menu.animate({'top': '-100%'}, 1000, function() {
             menu.hide(0)
             $("#win").hide(0);
             $("#loose").hide(0);
             $("#tie").hide(0);
+            console.log('hide staff')
         });
     };
 
@@ -196,20 +200,25 @@ $(document).ready(function() {
     };
 
     TTT.prototype.end = function(status){
-        switch (status) {
-            case 1:
-                $("#win").show(0);
-                break;
-            case 0:
-                $("#loose").show(0);
-                break;
-            case 3:
-                $("#tie").show(0);
-                break;
-            default:
-                break;
-        }
-        this.showMenu();
+        var ttt = this;
+        this.player.clearListeners();
+        setTimeout(function () {
+            ttt.showMenu();
+
+            switch (status) {
+                case 1:
+                    $("#win").show(0);
+                    break;
+                case 0:
+                    $("#loose").show(0);
+                    break;
+                case 3:
+                    $("#tie").show(0);
+                    break;
+                default:
+                    break;
+            }
+        }, 200);
     };
 
 
