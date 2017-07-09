@@ -151,3 +151,11 @@ header h2 {
 #play-btn:focus {
     outline:0;
 }
+
+/* .highlight {
+    background-color: #F3F2F2;
+} */
+
+.highlight:hover {
+    background-color: #F3F2F2;
+}

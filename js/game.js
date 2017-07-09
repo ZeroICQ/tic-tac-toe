@@ -66,6 +66,7 @@ $(document).ready(function() {
     Player.prototype.clearListeners = function(argument){
         $(".game-cell").off('click');
     };
+    
     var Game = function(ttt, AI) {
         this.ttt = ttt; 
         this.AI = AI;
@@ -76,7 +77,7 @@ $(document).ready(function() {
         for (let i = 0; i < 3; ++i) {
             for (let j = 0; j < 3; ++j) {   
                 this.cellState[i][j] = FREE;
-                $('#c-'+j+'-'+i).html('')
+                // $('#c-'+j+'-'+i).html('')
             }
         }
     };
@@ -102,32 +103,37 @@ $(document).ready(function() {
         }
         else if (this.gameState === AI_TURN) {
             console.log('comp end thinking');
-            this.cellState[x][y] = ZERO;
+            this.cellState[x][y] = ZERO; 
             setZero(cell);
         }
+
+        ttt.redrawPossibleTurns(this.cellState);
 
         if(this.checkWin() === true) {
             this.end();
             return;
         }
-        else if (this.turnCount === 8) {
+        else if (this.turnCount === 8) {//last turn
             this.end(TIE)
+            return;
         }
-
+        //change turn
         if (this.gameState === HUMAN_TURN) {
             this.gameState = AI_TURN;
             console.log('comp start thinking');
-            setTimeout(function(game) {game.AI.makeTurn(game)}, 0, this);
+            setTimeout(function(game) {game.AI.makeTurn(game);}, 200, this);
         }
         else if (this.gameState === AI_TURN) {
             this.gameState = HUMAN_TURN;
         }
+
         this.turnCount++;
 
     };
 
     Game.prototype.start = function(argument){
         setInterval(this.gameLoop, 1000);
+        ttt.redrawPossibleTurns(this.cellState);
     };
 
     Game.prototype.end = function(isTie = 0){
@@ -201,6 +207,11 @@ $(document).ready(function() {
     };
 
     TTT.prototype.start = function() {
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {   
+                $('#c-'+j+'-'+i).html('')
+            }
+        }
         this.hideMenu();
         var ai = new easyAi();
         var game = new Game(this, ai);
@@ -228,6 +239,17 @@ $(document).ready(function() {
                     break;
             }
         }, 200);
+    };
+
+    TTT.prototype.redrawPossibleTurns = function(cellState){ 
+        for (let i = 0; i < 3; ++i) {
+            for (let j = 0; j < 3; ++j) {   
+                if(cellState[i][j] === FREE) 
+                    $('#c-'+i+'-'+j).addClass('highlight');
+                else
+                    $('#c-'+i+'-'+j).removeClass('highlight');
+            }
+        }
     };
 
 
