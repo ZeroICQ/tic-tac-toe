@@ -16,12 +16,14 @@ $(document).ready(function() {
     }
 
     function setCross(cell) {
-        cell.html("<img src='img/cross.png'>");
+        cell.html("<img style='display:none' src='img/cross.png'>");
+		cell.find("img").fadeIn(200);
         console.log('set cross');
     }
 
     function setZero(cell) {
-        cell.html("<img src='img/zero.png'>");
+        cell.html("<img style='display:none' src='img/zero.png'>");
+		cell.find("img").fadeIn(200);
         console.log('set zero');
     }
 
