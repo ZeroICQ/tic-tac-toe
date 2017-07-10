@@ -198,7 +198,6 @@ $(document).ready(function() {
     };
 
     Game.prototype.start = function(argument){
-        setInterval(this.gameLoop, 1000);
         ttt.redrawPossibleTurns(this.cellState);
     };
 
